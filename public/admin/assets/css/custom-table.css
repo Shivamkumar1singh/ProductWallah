@@ -1,0 +1,29 @@
+/* Common table styles */
+.users-table,
+.products-table,
+.roles-table {
+    border-collapse: collapse; /* ensures borders do not double */
+    width: 100%;
+}
+
+/* Borders */
+.users-table th, .users-table td,
+.products-table th, .products-table td,
+.roles-table th, .roles-table td {
+    border: 1px solid black !important;
+    padding: 8px; /* optional for spacing */
+}
+
+/* Striped rows */
+.users-table tbody tr:nth-of-type(odd),
+.products-table tbody tr:nth-of-type(odd),
+.roles-table tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.03);
+}
+
+/* Hover effect */
+.users-table tbody tr:hover,
+.products-table tbody tr:hover,
+.roles-table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}

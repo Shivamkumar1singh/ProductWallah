@@ -1,0 +1,20 @@
+<svg width="150" height="35" viewBox="0 0 150 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Centered Shopping Bag Icon -->
+    <g transform="translate(2,3)">
+        <!-- Outer rounded container -->
+        <rect x="0" y="0" width="28" height="28" rx="7" stroke="#0A2540" stroke-width="2" fill="none"></rect>
+
+        <!-- Bag Body (centered) -->
+        <rect x="8" y="11" width="12" height="12" rx="2" stroke="#0A2540" stroke-width="2" fill="none"></rect>
+
+        <!-- Bag Handle (centered above bag) -->
+        <path d="M10 11 C10 7.5, 18 7.5, 18 11" stroke="#0A2540" stroke-width="2" fill="none" stroke-linecap="round"></path>
+    </g>
+
+    <!-- ProductWallah Text -->
+    <text x="38" y="22" fill="#0A2540" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="600" letter-spacing="0.2">
+        ProductWallah
+    </text>
+
+</svg>
