@@ -34,7 +34,7 @@ use App\Datatables\OrdersDataTable;
 
 Route::get('/', function() {
     // If customer is logged in, go to shop
-    if (auth()->check()) {
+    if (auth('web')->check()) {
         return redirect()->route('shop.index');
     }
 
@@ -52,8 +52,8 @@ Auth::routes(['login' => false, 'register' => false,]);
 
 
 Route::get('/login', function () {
-    if (auth()->check()) {
-        if (auth()->user()->hasRole('admin')){
+    if (auth('web')->check()) {
+        if (auth('web')->user()->hasRole('admin')){
             return redirect()->route('admin.dashboard');
         } else {
             return redirect()->route('shop.index');
@@ -63,7 +63,7 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::get('/customer/login', function() {
-    if(auth()->check()) {
+    if(auth('web')->check()) {
         //return redirect()->route('customer.dashboard');
         return redirect()->route('shop.index');
     }
@@ -194,7 +194,8 @@ Route::middleware(['auth'])
  
         
         
-
+// Include custom routes
+require __DIR__.'/vendor.php';
 
 
 
