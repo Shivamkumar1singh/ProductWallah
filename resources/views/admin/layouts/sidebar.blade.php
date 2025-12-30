@@ -84,6 +84,28 @@
             </li>
           </ul>
         </li>
+        <li class="pc-item pc-hasmenu">
+          <a href="#!" class="pc-link">
+            <span class="pc-micon">
+              <i class="ph ph-ticket me-2"></i>
+            </span>
+            <span class="pc-mtext" >Coupons and Vouchers</span>
+            <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
+          </a>
+        
+          <ul class="pc-submenu">
+            <li class="pc-item">
+              <a class="pc-link" href="#" data-i18n="product_list">
+                <i class="ph ph-percent me-2"></i> Coupons
+              </a>
+            </li>
+            <li class="pc-item">
+              <a class="pc-link" href="#" data-i18n="product_list">
+                <i class="ph ph-gift me-2"></i> Vouchers
+              </a>
+            </li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
