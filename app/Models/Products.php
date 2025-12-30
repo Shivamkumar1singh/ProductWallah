@@ -27,4 +27,18 @@ class Products extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    public function orders()
+{
+    return $this->belongsToMany(Order::class, 'order_product', 'product_item_id', 'order_id')
+                ->withPivot('vendor_id')
+                ->withTimestamps();
+}
+
+public function vendor()
+{
+    return $this->belongsTo(Vendor::class, 'vendor_id');
+}
+
+
 }

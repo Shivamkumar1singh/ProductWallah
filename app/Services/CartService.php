@@ -6,14 +6,17 @@ use App\Repositories\CartRepository;
 use App\Models\Order;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use App\Services\OrderService;
 
 class CartService
 {
     protected CartRepository $repo;
+    protected OrderService $orderService;
 
-    public function __construct(CartRepository $repo)
+    public function __construct(CartRepository $repo, OrderService $orderService)
     {
         $this->repo = $repo;
+        $this->orderService = $orderService;
     }
 
     public function getCartSummary(): array
@@ -40,6 +43,8 @@ class CartService
             $cart[$productId]['quantity']++;
         } else {
             $cart[$productId] = [
+                'product_id' => $product->id,
+                'vendor_id'  => $product->vendor_id,
                 'name' => $product->name,
                 'price'=> $product->price,
                 'image'=> $product->image,
@@ -187,6 +192,19 @@ class CartService
             'state'=> $shipping['state'],
             'pincode'=> $shipping['pincode'],
         ]);
+
+        // 2️⃣ Attach products to pivot table
+        foreach ($cart as $item) {
+            // Make sure your cart item has 'product_id', 'vendor_id', 'quantity', 'price'
+            $order->products()->attach($item['product_id'], [
+                'vendor_id' => $item['vendor_id'],
+                'quantity'  => $item['quantity'],
+                'price'     => $item['price'],
+            ]);
+        }
+
+        // ✅ THIS WAS MISSING
+        $this->orderService->sendVendorOrderEmail($order);
 
         $this->repo->clearCart();
         session()->forget(['shipping_details', 'stripe_shipping_backup', 'stripe_cart_backup']);

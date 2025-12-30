@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vendor Dashboard</title>
     <link rel="icon" type="image/png" href="{{ asset('admin/assets/images/shopping-bag.png') }}">
+    
     <meta
       name="description"
       content="Admindek - Modern responsive dashboard template built with Bootstrap 5. Features dark/light themes, RTL support, and extensive UI components for admin panels and web applications."
@@ -66,11 +67,7 @@
 
 
     @stack('styles')
-    <style>
-      .logo-white {
-    filter: brightness(0) invert(1);
-    height: 40px; /* adjust size */
-}
+    
 
     </style>
 </head>
@@ -145,108 +142,8 @@
     <script src="{{ asset('admin/assets/js/theme.js') }}"></script>
 
     <!-- Dashboard Custom Charts (KPI, Revenue, System, Performance, etc.) -->
-    <script>
-      // Enhanced KPI Cards with mini charts
-      const kpiCharts = {
-        totalRevenue: {
-          chart: { type: 'line', width: 80, height: 50, sparkline: { enabled: true } },
-          series: [{ data: [31, 40, 28, 51, 42, 85, 77] }],
-          stroke: { width: 2, colors: ['#ffffff'] },
-          tooltip: { enabled: false }
-        },
-        activeUsers: {
-          chart: { type: 'area', width: 80, height: 50, sparkline: { enabled: true } },
-          series: [{ data: [11, 32, 45, 32, 34, 52, 41] }],
-          fill: { colors: ['#ffffff'], opacity: 0.3 },
-          stroke: { colors: ['#ffffff'] },
-          tooltip: { enabled: false }
-        },
-        orders: {
-          chart: { type: 'bar', width: 80, height: 50, sparkline: { enabled: true } },
-          series: [{ data: [47, 45, 54, 38, 56, 24, 65] }],
-          colors: ['#ffffff'],
-          tooltip: { enabled: false }
-        },
-        conversion: {
-          chart: { type: 'line', width: 80, height: 50, sparkline: { enabled: true } },
-          series: [{ data: [15, 75, 47, 65, 55, 70, 85] }],
-          stroke: { width: 2, colors: ['#ffffff'], curve: 'smooth' },
-          tooltip: { enabled: false }
-        }
-      };
-
-      Object.keys(kpiCharts).forEach(chartId => {
-        const el = document.querySelector(`#${chartId.replace(/([A-Z])/g, '-$1').toLowerCase()}-chart`);
-        if (el) new ApexCharts(el, kpiCharts[chartId]).render();
-      });
-
-      // Real-time Analytics Chart
-      const realTimeOptions = {
-        chart: { type: 'area', height: 350, animations: { enabled: true, easing: 'linear', dynamicAnimation: { speed: 1000 } }, toolbar: { show: false } },
-        series: [
-          { name: 'Sessions', data: [31, 40, 28, 51, 42, 85, 77, 95, 87, 73, 69, 85] },
-          { name: 'Page Views', data: [87, 76, 65, 89, 95, 76, 89, 67, 78, 95, 87, 92] }
-        ],
-        xaxis: { categories: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] },
-        colors: ['#4680ff','#04a9f5'],
-        fill: { opacity: 0.3 },
-        stroke: { curve: 'smooth' }
-      };
-      if (document.querySelector('#real-time-chart')) new ApexCharts(document.querySelector('#real-time-chart'), realTimeOptions).render();
-    </script>
-    <script>
-    // Revenue Trends Chart
-      const revenueTrendsOptions = {
-        chart: {
-          type: 'line',
-          height: 300,
-          toolbar: { show: false }
-        },
-        series: [{
-          name: 'Actual Revenue',
-          data: [44, 55, 57, 56, 61, 58, 63, 60, 66, 75, 85, 89]
-        }, {
-          name: 'Forecast',
-          data: [null, null, null, null, null, null, null, null, 66, 78, 88, 95]
-        }, {
-          name: 'Target',
-          data: [50, 60, 65, 70, 75, 80, 85, 90, 95, 100, 105, 110]
-        }],
-        xaxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        },
-        colors: ['#4680ff', '#2ed8b6', '#ffb64d'],
-        stroke: {
-          curve: 'smooth',
-          dashArray: [0, 5, 0]
-        },
-        fill: {
-          type: 'solid',
-          opacity: 0.1
-        },
-        markers: {
-          size: 4,
-          strokeWidth: 2,
-          strokeColors: '#fff',
-          hover: {
-            size: 6
-          }
-        },
-        legend: {
-          show: true,
-          position: 'top',
-          horizontalAlign: 'right'
-        },
-        grid: {
-          borderColor: '#e9ecef',
-          strokeDashArray: 3
-        }
-      };
-
-      if (document.querySelector('#revenue-trends')) {
-        new ApexCharts(document.querySelector('#revenue-trends'), revenueTrendsOptions).render();
-      }
-    </script>
+    
+      
 
     <!-- Theme Config -->
     <script>

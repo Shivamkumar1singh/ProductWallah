@@ -23,7 +23,7 @@
         </li>
 
 
-        <li class="pc-item pc-hasmenu">
+        <li class="pc-item pc-hasmenu"> 
           <a href="#!" class="pc-link">
             <span class="pc-micon">
               <i class="ph ph-shopping-cart-simple"></i>
@@ -34,18 +34,37 @@
         
           <ul class="pc-submenu">
             <li class="pc-item">
-              <a class="pc-link" href="#" data-i18n="product_list">
+              <a class="pc-link" href="{{ route('vendor.productManagement.product.index') }}" data-i18n="product_list">
                 <i class="ph ph-package me-2"></i> Product List
               </a>
             </li>
             
-            <li class="pc-item">
+            <!-- <li class="pc-item">
               <a class="pc-link" href="#" data-i18n="cart_list">
                 <i class="ph ph-squares-four me-2"></i> Categories
+              </a>
+            </li> -->
+          </ul>
+        </li>
+
+        <li class="pc-item pc-hasmenu">
+          <a href="#!" class="pc-link">
+            <span class="pc-micon">
+              <i class="ph ph-clipboard-text me-2"></i>
+            </span>
+            <span class="pc-mtext" >Order Details</span>
+            <span class="pc-arrow"><i class="ti ti-chevron-right"></i></span>
+          </a>
+        
+          <ul class="pc-submenu">
+            <li class="pc-item">
+              <a class="pc-link" href="{{ route('vendor.orders.index') }}" data-i18n="product_list">
+                <i class="ph ph-shopping-bag me-2"></i> Order
               </a>
             </li>
           </ul>
         </li>
+
         
       </ul>
     </div>

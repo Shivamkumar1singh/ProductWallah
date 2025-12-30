@@ -98,7 +98,7 @@
 <script>
 $(document).ready(function () {
 
-    console.log("Cart JS Loaded ✔");
+    //console.log("Cart JS Loaded ✔");
 
     // fixed - added a reusable formatter (same as number_format)
 

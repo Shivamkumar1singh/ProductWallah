@@ -25,7 +25,7 @@ class CategoryController extends Controller
 
     public function create()
     {
-        $categories = Category::whereNull('parent_id')->with('children')->get();
+        $categories = Category::whereNull('parent_id')->with('childrenRecursive')->get();
         return view('productManagement.categories.create', compact('categories'));
     }
 
@@ -42,7 +42,7 @@ class CategoryController extends Controller
     {
         $categories = Category::whereNull('parent_id')
             ->where('id', '!=', $category->id)
-            ->with('children')
+            ->with('childrenRecursive')
             ->get();
 
         return view('productManagement.categories.edit', compact('category', 'categories'));

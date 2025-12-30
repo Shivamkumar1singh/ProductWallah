@@ -18,6 +18,23 @@
         </div>
     @endif
 
+
+    @php
+    // Recursive function for dropdown
+    function renderCategoryOptions($categories, $level = 0, $selected = null) {
+        foreach($categories as $cat) {
+            $isSelected = $selected && $selected == $cat->id ? 'selected' : '';
+            echo '<option value="'.$cat->id.'" '.$isSelected.'>';
+            echo str_repeat('— ', $level).' '.$cat->name;
+            echo '</option>';
+
+            if($cat->childrenRecursive->isNotEmpty()) {
+                renderCategoryOptions($cat->childrenRecursive, $level + 1, $selected);
+            }
+        }
+    }
+    @endphp
+
     <form action="{{ route('admin.productManagement.categories.store') }}" method="POST">
         @csrf
 
@@ -33,17 +50,9 @@
             <select name="parent_id" id="parent_id" class="form-control">
                 <option value="">— Main Category —</option>
         
-                @foreach($categories as $parent)
-                    <option value="{{ $parent->id }}">
-                        {{ $parent->name }}
-                    </option>
-        
-                    @foreach($parent->children as $child)
-                        <option value="{{ $child->id }}">
-                            └─ {{ $child->name }}
-                        </option>
-                    @endforeach
-                @endforeach
+                @php
+                    renderCategoryOptions($categories, 0, old('parent_id'));
+                @endphp
             </select>
         </div>
 

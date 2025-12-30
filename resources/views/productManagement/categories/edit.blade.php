@@ -18,6 +18,25 @@
         </div>
     @endif
 
+
+    @php
+    // Recursive function for dropdown
+    function renderCategoryOptions($categories, $level = 0, $selected = null, $current = null) {
+        foreach($categories as $cat) {
+            $isDisabled = $current && $current == $cat->id ? 'disabled' : '';
+            $isSelected = $selected && $selected == $cat->id ? 'selected' : '';
+            echo '<option value="'.$cat->id.'" '.$isSelected.' '.$isDisabled.'>';
+            echo str_repeat('— ', $level).' '.$cat->name;
+            echo '</option>';
+
+            if($cat->childrenRecursive->isNotEmpty()) {
+                renderCategoryOptions($cat->childrenRecursive, $level + 1, $selected, $current);
+            }
+        }
+    }
+    @endphp 
+
+
     <form action="{{ route('admin.productManagement.categories.update', $category->id) }}" method="POST">
         @csrf
         @method('PUT')
@@ -34,19 +53,9 @@
             <select name="parent_id" class="form-control">
                 <option value="">— Main Category —</option>
         
-                @foreach($categories as $parent)
-                    <option value="{{ $parent->id }}"
-                        {{ $category->parent_id == $parent->id ? 'selected' : '' }}>
-                        {{ $parent->name }}
-                    </option>
-        
-                    @foreach($parent->children as $child)
-                        <option value="{{ $child->id }}"
-                            {{ $category->parent_id == $child->id ? 'selected' : '' }}>
-                            └─ {{ $child->name }}
-                        </option>
-                    @endforeach
-                @endforeach
+                @php
+                    renderCategoryOptions($categories, 0, old('parent_id', $category->parent_id), $category->id);
+                @endphp
             </select>
         </div>
 

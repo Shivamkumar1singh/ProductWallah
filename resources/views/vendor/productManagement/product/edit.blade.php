@@ -16,7 +16,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.productManagement.product.update', $product) }}" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('vendor.productManagement.product.update', $product) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -24,27 +24,21 @@
         <div class="mb-3">
             <label for="category_id" class="form-label">Category</label>
             <select name="category_id" id="category_id" class="form-control" required>
-                <option value="">Select Category</option>
-
-                @php
-                    // Recursive function to render categories
-                    function renderCategories($categories, $productCategoryId = null, $prefix = '') {
-                        foreach ($categories as $category) {
-                            echo '<option value="' . $category->id . '"';
-                            if ($category->id == old('category_id', $productCategoryId)) echo ' selected';
-                            echo '>' . $prefix . $category->name . '</option>';
-        
-                            if ($category->childrenRecursive->count()) {
-                                renderCategories($category->childrenRecursive, $productCategoryId, $prefix . '└─ ');
-                            }
-                        }
-                    }
-                @endphp
-        
-                {{-- Render top-level categories recursively --}}
-                @php
-                    renderCategories($categories->where('parent_id', null), $product->category_id);
-                @endphp
+                @foreach($categories->where('parent_id', null) as $cat)
+                    <option value="{{ $cat->id }}" {{ $cat->id == old('category_id', $product->category_id) ? 'selected' : '' }}>
+                        {{ $cat->name }}
+                    </option>
+                    @foreach($cat->children as $child)
+                        <option value="{{ $child->id }}" {{ $child->id == old('category_id', $product->category_id) ? 'selected' : '' }}>
+                            └─ {{ $child->name }}
+                        </option>
+                        @foreach($child->children as $subChild)
+                            <option value="{{ $subChild->id }}" {{ $subChild->id == old('category_id', $product->category_id) ? 'selected' : '' }}>
+                                  └─ {{ $subChild->name }}
+                            </option>
+                        @endforeach
+                    @endforeach
+                @endforeach
             </select>
 
         </div>
@@ -88,7 +82,7 @@
         </div>
 
         <button type="submit" class="btn btn-success">Update</button>
-        <a href="{{ route('admin.productManagement.product.index') }}" class="btn btn-secondary">Back</a>
+        <a href="{{ route('vendor.productManagement.product.index') }}" class="btn btn-secondary">Back</a>
     </form>
 </div>
 @endsection

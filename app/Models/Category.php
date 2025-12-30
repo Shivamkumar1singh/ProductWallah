@@ -39,9 +39,14 @@ class Category extends Model
     // Child categories (Smartphones, AC, etc.)
     public function children()
     {
-        return $this->hasMany(Category::class, 'parent_id')->where('status', 1);
+        return $this->hasMany(Category::class, 'parent_id');//->where('status', 1);
     }
 
+    // 🔥 Infinite recursion
+    public function childrenRecursive()
+    {
+        return $this->children()->with('childrenRecursive');
+    }
 
     
 }

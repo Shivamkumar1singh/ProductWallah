@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Vendor;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Vendor\Vendor;
+use App\Models\Vendor\Product;
+
 
 class Vendor extends Authenticatable
 {
@@ -21,4 +24,15 @@ class Vendor extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    public function product()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    public function orders()
+{
+    return $this->hasManyThrough(Order::class, Product::class, 'vendor_id', 'id', 'id', 'id');
+}
+
 }

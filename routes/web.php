@@ -173,7 +173,6 @@ Route::middleware(['auth'])
         //Route::get('/orders/list', [OrderController::class, 'getOrders'])->name('orders.list');
         Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
         Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
-       
 
 
         Route::prefix('productManagement')

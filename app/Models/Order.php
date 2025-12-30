@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Vendor\Vendor;
 
 class Order extends Model
 {
@@ -23,6 +24,7 @@ class Order extends Model
         'city',
         'state',
         'pincode',
+        'vendor_id',
     ];
 
     protected $casts = [
@@ -33,4 +35,31 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class);
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Products::class, 'order_product', 'order_id', 'product_item_id')
+                    ->withPivot('vendor_id', 'quantity', 'price')
+                    ->withTimestamps();
+    }
+
+
+    public function totalForVendor($vendorId)
+{
+    return $this->products
+                ->where('pivot.vendor_id', $vendorId)
+                ->sum(function($product) {
+                    return $product->pivot->price * $product->pivot->quantity;
+                });
+}
+
+
+    
 }

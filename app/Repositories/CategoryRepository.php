@@ -8,9 +8,14 @@ use Illuminate\Support\Str;
 class CategoryRepository
 {
     public function getAll()
-    {
-        return Category::with('parent')->latest()->get();
-    }
+{
+    return Category::whereNull('parent_id')
+        ->where('status', 1)
+        ->with('childrenRecursive')
+        ->latest()
+        ->get();
+}
+
 
     public function store(array $data)
     {
@@ -34,6 +39,9 @@ class CategoryRepository
 
     public function delete(Category $category)
     {
+        if ($category->children()->exists()) {
+            throw new \Exception('Cannot delete category with child categories.');
+        }
         return $category->delete();
     }
 }

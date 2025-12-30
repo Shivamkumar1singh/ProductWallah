@@ -72,7 +72,7 @@ return [
 
         'vendors' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\Vendor::class),
+            'model' => env('AUTH_MODEL', App\Models\Vendor\Vendor::class),
         ],
     ],
 

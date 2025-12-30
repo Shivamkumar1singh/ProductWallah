@@ -20,6 +20,35 @@
     </div>
 @endif
 
+
+@php
+// Recursive function to render categories
+function renderCategoryRows($categories, $level = 0) {
+    foreach ($categories as $index => $category) {
+        echo '<tr>';
+        echo '<td>'.($index + 1).'</td>';
+        echo '<td>';
+        echo $level > 0 ? str_repeat('— ', $level).' '.$category->name : '<strong>'.$category->name.'</strong>';
+        echo '</td>';
+        echo '<td>'.($category->parent->name ?? 'Main Category').'</td>';
+        echo '<td>'.$category->description.'</td>';
+        echo '<td>
+                <a href="'.route("admin.productManagement.categories.edit", $category->id).'" class="btn btn-sm btn-primary">Edit</a>
+                <form method="POST" action="'.route("admin.productManagement.categories.destroy", $category->id).'" style="display:inline;">
+                    '.csrf_field().'
+                    '.method_field("DELETE").'
+                    <button class="btn btn-sm btn-danger" onclick="return confirm(\'Are you sure?\')">Delete</button>
+                </form>
+              </td>';
+        echo '</tr>';
+
+        if ($category->childrenRecursive->isNotEmpty()) {
+            renderCategoryRows($category->childrenRecursive, $level + 1);
+        }
+    }
+}
+@endphp
+
 <table class="table table-bordered table-striped align-middle mt-3">
     <thead class="table-dark">
         <tr>
@@ -32,41 +61,9 @@
     </thead>
 
     <tbody>
-        @foreach($categories as $index => $category)
-        <tr>
-            <td>{{ $index + 1 }}</td>
-
-            <td>
-                @if($category->parent_id)
-                    └─ {{ $category->name }}
-                @else
-                    <strong>{{ $category->name }}</strong>
-                @endif
-            </td>
-
-            <td>{{ $category->parent->name ?? 'Main Category' }}</td>
-
-            <td>{{ $category->description }}</td>
-
-            <td>
-                <a href="{{ route('admin.productManagement.categories.edit', $category->id) }}"
-                   class="btn btn-sm btn-primary">
-                    Edit
-                </a>
-
-                <form method="POST"
-                      action="{{ route('admin.productManagement.categories.destroy', $category->id) }}"
-                      style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button class="btn btn-sm btn-danger"
-                            onclick="return confirm('Are you sure?')">
-                        Delete
-                    </button>
-                </form>
-            </td>
-        </tr>
-        @endforeach
+        @php
+            renderCategoryRows($categories);
+        @endphp
     </tbody>
 </table>
 

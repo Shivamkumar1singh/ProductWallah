@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Vendor;
 
 use App\Models\Order;
 use App\Models\Vendor\Vendor;      // ✅ Add this
 use App\Mail\VendorOrderMail;
 use Illuminate\Support\Facades\Mail;
-use App\Repositories\OrderRepository;
+use App\Repositories\Vendor\OrderRepository;
 
 class OrderService
 {
@@ -24,7 +24,19 @@ class OrderService
 
     public function getDetails(Order $order)
     {
-        return $this->repo->getOrderDetails($order);
+        $vendorId = auth('vendor')->id();
+
+        // Load only vendor products
+        $order->load(['products' => function ($query) use ($vendorId) {
+            $query->wherePivot('vendor_id', $vendorId);
+        }]);
+
+        // Security check
+        if ($order->products->isEmpty()) {
+            abort(403, 'Unauthorized access to this order');
+        }
+
+        return $order;
     }
 
     public function getStatusCounts()
