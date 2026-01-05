@@ -71,7 +71,7 @@
         @if($product->image)
             <div class="mb-3">
                 <label class="form-label">Current Image</label><br>
-                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" width="150">
+                <img src="{{ asset('uploads/products/' . $product->image) }}" alt="{{ $product->name }}" width="150">
             </div>
         @endif
 
