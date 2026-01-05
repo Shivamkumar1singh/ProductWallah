@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\CartRepository;
 use App\Models\Order;
+use App\Models\Products;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use App\Services\OrderService;
@@ -195,9 +196,19 @@ class CartService
 
         // 2️⃣ Attach products to pivot table
         foreach ($cart as $item) {
+
+            // ✅ Always fetch product from DB
+            $product = Products::select('id', 'vendor_id')
+                ->findOrFail($item['product_id']);
+        
+            // 🛑 Safety check
+            if (!$product->vendor_id) {
+                throw new \Exception("Vendor missing for product ID: {$product->id}");
+            }
+
             // Make sure your cart item has 'product_id', 'vendor_id', 'quantity', 'price'
             $order->products()->attach($item['product_id'], [
-                'vendor_id' => $item['vendor_id'],
+                'vendor_id' => $product->vendor_id,
                 'quantity'  => $item['quantity'],
                 'price'     => $item['price'],
             ]);

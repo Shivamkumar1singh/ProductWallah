@@ -17,6 +17,8 @@ use App\Http\Controllers\Customer\ShopController;
 use App\Http\Controllers\Customer\CartController as CustomerCartController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 use App\Datatables\OrdersDataTable;
+use App\Http\Controllers\Customer\ApplyCouponController;
+use App\Http\Controllers\Admin\CouponController;
 
 /*
 |--------------------------------------------------------------------------
@@ -140,6 +142,19 @@ Route::middleware(['auth'])->group(function () {
             ->name('orders.show');
         
 
+        
+
+        // Coupon apply / remove (AJAX)
+        Route::post('/coupon/apply', [ApplyCouponController::class, 'apply'])
+            ->name('coupon.apply');
+        
+        Route::post('/coupon/remove', [ApplyCouponController::class, 'remove'])
+            ->name('coupon.remove');
+
+        Route::get('/coupons', [App\Http\Controllers\Customer\CouponController::class, 'index'])
+            ->name('coupons.index');
+
+
     });
 });
 
@@ -187,8 +202,25 @@ Route::middleware(['auth'])
                 Route::resource('product', ProductsController::class);
                 
                 });
-            });
+        
+        // Coupon Management
+        Route::resource('coupons', CouponController::class)
+            ->except(['show']);
 
+        Route::get('coupons/data',
+            [CouponController::class, 'data']
+        )->name('coupons.data');
+        
+        
+        Route::patch('coupons/{coupon}/toggle',
+            [CouponController::class, 'toggle']
+        )->name('coupons.toggle');
+});
+
+ 
+        
+
+        
 
  
         

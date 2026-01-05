@@ -8,16 +8,19 @@ use App\Services\CartService;
 use App\Http\Requests\Cart\CartAddRequest;
 use App\Http\Requests\Cart\CartUpdateRequest;
 use App\Http\Requests\Cart\SaveShippingRequest;
+use App\Services\CouponService;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
 
 class CartController extends Controller
 {
     protected CartService $service;
+    protected CouponService $couponService;
 
-    public function __construct(CartService $service)
+    public function __construct(CartService $service, CouponService $couponService)
     {
         $this->service = $service;
+        $this->couponService = $couponService;
         $this->middleware('auth');
     }
 
@@ -80,6 +83,8 @@ class CartController extends Controller
             return redirect()->route('customer.cart.index')->with('error', $data['error']);
         }
 
+        $data['coupons'] = $this->couponService->getAvailableCouponsForCustomer(auth()->id());
+
         return view('customer.checkout', $data);
     }
 
@@ -119,10 +124,18 @@ class CartController extends Controller
         }
 
         $result = $this->service->handlePaymentSuccess(auth()->id(), $shipping, $cart);
+        
 
         if (isset($result['error'])) {
             return redirect()->route('shop.index')->with('error', $result['error']);
         }
+
+        // ✅ FINALIZE COUPON (DB + usage count)
+        $this->couponService->finalizeCouponUsage(
+            $result['order']->id,
+            auth()->id()
+        );
+
 
         return view('customer.checkout.success', ['order' => $result['order']]);
     }

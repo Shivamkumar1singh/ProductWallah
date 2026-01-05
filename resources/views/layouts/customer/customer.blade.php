@@ -30,6 +30,14 @@
 .dropdown-submenu:hover > a {
     background-color: #f8f9fa;
 }
+/* #couponDropdown {
+    position: relative;
+    z-index: 9999;
+}
+.checkout-right {
+    overflow: visible !important;
+} */
+
 </style>
 
 </head>
@@ -97,6 +105,12 @@
                 <a class="dropdown-item "
                    href="{{ route('customer.orders.index') }}">
                     My Orders
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item "
+                   href="{{ route('customer.coupons.index') }}">
+                    Coupons
                 </a>
             </li>
             <li>

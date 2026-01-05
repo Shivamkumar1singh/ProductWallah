@@ -254,6 +254,7 @@
     <script src="{{ asset('admin/assets/js/script.js') }}"></script>
 
     @stack('scripts')
+    
 
 </body>
 

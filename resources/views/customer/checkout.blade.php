@@ -1,5 +1,6 @@
 @extends('layouts.customer.customer')
 
+
 @section('content')
 
 <style>
@@ -134,12 +135,80 @@
             
         
 
+        {{-- COUPON SECTION --}}
+<div class="mb-3">
+
+    @if(session()->has('applied_coupon'))
+        <div class="alert alert-success d-flex justify-content-between align-items-center">
+            <div>
+                Coupon <strong>{{ session('applied_coupon.code') }}</strong>
+                (−₹{{ number_format(session('applied_coupon.discount'), 2) }})
+            </div>
+            <button class="btn btn-sm btn-danger" id="removeCoupon">Remove</button>
+        </div>
+    @else
+
+        <label class="fw-bold mb-1">Apply Coupon</label>
+        <!-- <p class="text-dark fw-bold">DROPDOWN START</p> -->
+        <!-- <select id="couponDropdown" class="form-select mb-2">
+            <option value="">-- Choose Coupon --</option>
+
+            @foreach($coupons as $coupon)
+                <option value="{{ $coupon->code }}">
+                    {{ $coupon->code }}
+                    @if($coupon->type === 'percentage')
+                        ({{ $coupon->value }}% OFF)
+                    @else
+                        (₹{{ $coupon->value }} OFF)
+                    @endif
+                </option>
+            @endforeach
+        </select> -->
+        <!-- <p class="text-dark fw-bold">DROPDOWN END</p> -->
+
+        <div class="input-group">
+            <input type="text"
+                   id="coupon_code"
+                   class="form-control"
+                   placeholder="Enter coupon code">
+
+            <button type="button" class="btn btn-outline-dark" id="applyCoupon">
+                Apply
+            </button>
+        </div>
+
+        <small class="text-danger d-none" id="couponError"></small>
+
+    @endif
+</div>
+
+
         <hr>
 
-        <div class="d-flex justify-content-between fw-bold fs-5 mb-3">
+        @php
+            $discount = session('applied_coupon.discount', 0);
+            $payable  = $total - $discount;
+        @endphp
+        
+        <div class="d-flex justify-content-between">
             <span>Total Amount</span>
             <span>₹{{ number_format($total, 2) }}</span>
         </div>
+        
+        @if(session()->has('applied_coupon'))
+        <div class="d-flex justify-content-between text-success">
+            <span>Coupon ({{ session('applied_coupon.code') }})</span>
+            <span>- ₹{{ number_format($discount, 2) }}</span>
+        </div>
+        @endif
+        
+        <hr>
+        
+        <div class="d-flex justify-content-between fw-bold fs-5 mb-3">
+            <span>Payable Amount</span>
+            <span>₹{{ number_format($payable, 2) }}</span>
+        </div>
+
 
         <button id="payBtn" class="btn btn-dark w-100">Pay with Stripe</button>
         <a href="{{ route('shop.index') }}" class="btn btn-outline-secondary w-100 mt-2">Continue Shopping</a>
@@ -234,6 +303,61 @@ $(document).ready(function() {
     
     });
 
+    $('#couponDropdown').on('change', function () {
+        $('#coupon_code').val($(this).val());
+    });
+
+    // APPLY COUPON
+    $('#applyCoupon').on('click', function (e) {
+        e.preventDefault();
+    
+        let code = $('#coupon_code').val().trim();
+    
+        if (!code) {
+            $('#couponError').text('Please enter a coupon code')
+                             .removeClass('d-none');
+            return;
+        }
+    
+        $.ajax({
+            url: "{{ route('customer.coupon.apply') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                coupon_code: code,
+                order_total: {{ $total }}
+            },
+            success: function (response) {
+                if (!response.success) {
+                    $('#couponError')
+                        .text(response.message)
+                        .removeClass('d-none');
+                } else {
+                    location.reload();
+                }
+            },
+            error: function (xhr) {
+                let msg = xhr.responseJSON?.message ?? 'Coupon cannot be applied';
+                $('#couponError').text(msg).removeClass('d-none');
+            }
+        });
+
+    });
+    
+    // REMOVE COUPON
+    $('#removeCoupon').on('click', function () {
+    
+        $.ajax({
+            url: "{{ route('customer.coupon.remove') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}"
+            },
+            success: function () {
+                location.reload();
+            }
+        });
+    });
 
 });
 
