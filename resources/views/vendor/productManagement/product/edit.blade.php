@@ -24,21 +24,27 @@
         <div class="mb-3">
             <label for="category_id" class="form-label">Category</label>
             <select name="category_id" id="category_id" class="form-control" required>
-                @foreach($categories->where('parent_id', null) as $cat)
-                    <option value="{{ $cat->id }}" {{ $cat->id == old('category_id', $product->category_id) ? 'selected' : '' }}>
-                        {{ $cat->name }}
-                    </option>
-                    @foreach($cat->children as $child)
-                        <option value="{{ $child->id }}" {{ $child->id == old('category_id', $product->category_id) ? 'selected' : '' }}>
-                            └─ {{ $child->name }}
-                        </option>
-                        @foreach($child->children as $subChild)
-                            <option value="{{ $subChild->id }}" {{ $subChild->id == old('category_id', $product->category_id) ? 'selected' : '' }}>
-                                  └─ {{ $subChild->name }}
-                            </option>
-                        @endforeach
-                    @endforeach
-                @endforeach
+                <option value="">Select Category</option>
+
+                @php 
+                    // Recursive function to render categories
+                    function renderCategories($categories, $productCategoryId = null, $prefix = '') {
+                        foreach ($categories as $category) {
+                            echo '<option value="' . $category->id . '"';
+                            if ($category->id == old('category_id', $productCategoryId)) echo ' selected';
+                            echo '>' . $prefix . $category->name . '</option>';
+        
+                            if ($category->childrenRecursive->count()) {
+                                renderCategories($category->childrenRecursive, $productCategoryId, $prefix . '└─ ');
+                            }
+                        }
+                    }
+                @endphp
+        
+                {{-- Render top-level categories recursively --}}
+                @php
+                    renderCategories($categories->where('parent_id', null), $product->category_id);
+                @endphp
             </select>
 
         </div>
@@ -71,8 +77,8 @@
         @if($product->image)
             <div class="mb-3">
                 <label class="form-label">Current Image</label><br>
-                <img src="{{ asset('uploads/products/' . $product->image) }}" alt="{{ $product->name }}" width="150">
-            </div>
+                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" width="150">
+            </div> 
         @endif
 
         {{-- Image Upload --}}

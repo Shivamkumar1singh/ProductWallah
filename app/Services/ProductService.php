@@ -24,7 +24,7 @@ class ProductService
         if (isset($data['name'])) {
             $data['slug'] = Str::slug($data['name']);
         }
-
+ 
         return $this->repo->create($data);
     }
 

@@ -19,6 +19,8 @@ use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 use App\Datatables\OrdersDataTable;
 use App\Http\Controllers\Customer\ApplyCouponController;
 use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfile;
+use App\Http\Controllers\Customer\ProfileController as CustomerProfile;
 
 /*
 |--------------------------------------------------------------------------
@@ -155,6 +157,12 @@ Route::middleware(['auth'])->group(function () {
             ->name('coupons.index');
 
 
+        // Customer Profile 
+        Route::get('/profile', [CustomerProfile::class, 'index'])->name('profile.index');
+        Route::post('/profile', [CustomerProfile::class, 'update'])->name('profile.update');
+        Route::post('/profile/password', [CustomerProfile::class, 'password'])->name('profile.password');
+
+
     });
 });
 
@@ -215,6 +223,11 @@ Route::middleware(['auth'])
         Route::patch('coupons/{coupon}/toggle',
             [CouponController::class, 'toggle']
         )->name('coupons.toggle');
+
+        // Admin Profile Routes
+        Route::get('/profile', [AdminProfile::class, 'index'])->name('profile.index');
+        Route::post('/profile', [AdminProfile::class, 'update'])->name('profile.update');
+        Route::post('/profile/password', [AdminProfile::class, 'password'])->name('profile.password');
 });
 
  

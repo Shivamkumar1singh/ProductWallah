@@ -34,17 +34,20 @@ class ProductsController extends Controller
     {
         $data = $request->validated();
 
-        // Handle image
+        // Handle image upload
+        $imagePath = null;
+        
         if ($request->hasFile('image')) {
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('uploads/products'), $imageName);
-            $data['image'] = $imageName;
+            $imagePath = $request->file('image')->store(
+                'products',     // folder inside storage/app/public
+                'public'        // disk
+            );
         }
 
         $this->service->create($data);
 
         return redirect()
-            ->route('admin.productManagement.product.index')
+            ->route('admin.productManagement.product.index') 
             ->with('success', 'Product added successfully!');
     }
 
@@ -58,16 +61,19 @@ class ProductsController extends Controller
     {
         $data = $request->validated();
 
+        // Handle image upload (CORRECT WAY) 
         if ($request->hasFile('image')) {
-
-            // Delete old image
-            if ($product->image && file_exists(public_path('uploads/products/' . $product->image))) {
-                unlink(public_path('uploads/products/' . $product->image));
+    
+            // Delete old image (important)
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
             }
-            
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('uploads/products'), $imageName);
-            $data['image'] = $imageName;
+    
+            // Store new image in storage/app/public/products
+            $imagePath = $request->file('image')->store('products', 'public');
+    
+            // Save FULL relative path
+            $product->image = $imagePath;
         }
 
         $this->service->update($product, $data);

@@ -23,21 +23,25 @@
             <label for="category_id" class="form-label">Category</label>
             <select name="category_id" id="category_id" class="form-control" required>
                 <option value="">Select Category</option>
-                @foreach($categories->where('parent_id', null) as $cat)
-                    <option value="{{ $cat->id }}" {{ old('category_id') == $cat->id ? 'selected' : '' }}>
-                        {{ $cat->name }}
-                    </option>
-                    @foreach($cat->children as $child)
-                        <option value="{{ $child->id }}" {{ old('category_id') == $child->id ? 'selected' : '' }}>
-                            └─ {{ $child->name }}
-                        </option>
-                        @foreach($child->children as $subChild)
-                            <option value="{{ $subChild->id }}" {{ old('category_id') == $subChild->id ? 'selected' : '' }}>
-                                  └─ {{ $subChild->name }}
-                            </option>
-                        @endforeach
-                    @endforeach
-                @endforeach
+                @php
+                    // Recursive function to render categories
+                    function renderCategories($categories, $prefix = '') {
+                        foreach ($categories as $category) {
+                            echo '<option value="' . $category->id . '"';
+                            if (old('category_id') == $category->id) echo ' selected';
+                            echo '>' . $prefix . $category->name . '</option>';
+        
+                            if ($category->childrenRecursive->count()) {
+                                renderCategories($category->childrenRecursive, $prefix . '└─ ');
+                            }
+                        }
+                    }
+                @endphp
+        
+                {{-- Render top-level categories recursively --}}
+                @php
+                    renderCategories($categories->where('parent_id', null));
+                @endphp
             </select>
 
         </div>

@@ -37,15 +37,15 @@
         </tr>
     </thead>
     <tbody>
-        @php
-            $i = 1;
-        @endphp
         @forelse($products as $p)
             <tr>
-                <td>{{ $i++ }}</td>
+                <td>
+                    {{ ($products->currentPage() - 1) * $products->perPage() + $loop->iteration }}
+                </td>
+
                 <td>
                     @if($p->image)
-                        <img src="{{ asset('uploads/products/' . $p->image) }}" alt="{{ $p->name }}" width="50" height="50">
+                        <img src="{{ asset('storage/' . $p->image) }}" alt="{{ $p->name }}" width="50" height="50">
                     @else
                         N/A
                     @endif

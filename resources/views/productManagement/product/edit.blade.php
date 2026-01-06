@@ -26,7 +26,7 @@
             <select name="category_id" id="category_id" class="form-control" required>
                 <option value="">Select Category</option>
 
-                @php
+                @php 
                     // Recursive function to render categories
                     function renderCategories($categories, $productCategoryId = null, $prefix = '') {
                         foreach ($categories as $category) {
@@ -77,7 +77,7 @@
         @if($product->image)
             <div class="mb-3">
                 <label class="form-label">Current Image</label><br>
-                <img src="{{ asset('uploads/products/' . $product->image) }}" alt="{{ $product->name }}" width="150">
+                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" width="150">
             </div>
         @endif
 

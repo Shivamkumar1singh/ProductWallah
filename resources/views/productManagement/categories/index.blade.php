@@ -19,14 +19,14 @@
         {{ $message }}
     </div>
 @endif
-
+ 
 
 @php
 // Recursive function to render categories
-function renderCategoryRows($categories, $level = 0) {
+function renderCategoryRows($categories, &$counter, $level = 0) {
     foreach ($categories as $index => $category) {
         echo '<tr>';
-        echo '<td>'.($index + 1).'</td>';
+        echo '<td>'.($counter ++).'</td>';
         echo '<td>';
         echo $level > 0 ? str_repeat('— ', $level).' '.$category->name : '<strong>'.$category->name.'</strong>';
         echo '</td>';
@@ -43,7 +43,7 @@ function renderCategoryRows($categories, $level = 0) {
         echo '</tr>';
 
         if ($category->childrenRecursive->isNotEmpty()) {
-            renderCategoryRows($category->childrenRecursive, $level + 1);
+            renderCategoryRows($category->childrenRecursive, $counter, $level + 1);
         }
     }
 }
@@ -62,7 +62,8 @@ function renderCategoryRows($categories, $level = 0) {
 
     <tbody>
         @php
-            renderCategoryRows($categories);
+            $counter = 1;
+            renderCategoryRows($categories,$counter);
         @endphp
     </tbody>
 </table>

@@ -3,17 +3,21 @@
 namespace App\Http\Controllers\Vendor;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Vendor\StoreProductRequest;
+use App\Http\Requests\Vendor\UpdateProductRequest;
 use App\Models\Vendor\Product;      
-use Illuminate\Support\Str;
+use App\Services\Vendor\ProductService;
 
 class ProductController extends Controller
 {
+    public function __construct(protected ProductService $service)
+    {
+
+    }
+
     public function index()
     {
-        $products = Product::where('vendor_id', auth('vendor')->id())
-                            ->orderBy('created_at', 'desc')
-                            ->paginate(10);
+        $products = $this->service->list();
 
         return view('vendor.productManagement.product.index', compact('products'));
     }
@@ -23,39 +27,9 @@ class ProductController extends Controller
         return view('vendor.productManagement.product.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $request->validate([
-            'name'        => 'required|string|max:255',
-            'price'       => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'description' => 'nullable|string',
-            'stock'       => 'nullable|integer|min:0',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-    
-        // Handle image upload
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->move(public_path('uploads/products'), $filename);
-            $imagePath = $filename; // store only filename
-        }
-        
-    
-        // Create product
-        Product::create([
-            'name'        => $request->name,
-            'slug'        => Str::slug($request->name) . '-' . time(),
-            'price'       => $request->price,
-            'category_id' => $request->category_id,
-            'description' => $request->description,
-            'stock'       => $request->stock ?? 0,
-            'vendor_id'   => auth('vendor')->id(),
-            'status'      => 1,
-            'image'       => $imagePath,
-        ]);
+        $this->service->store($request->validated());
     
         return redirect()->route('vendor.productManagement.product.index')
                          ->with('success', 'Product created successfully');
@@ -69,38 +43,11 @@ class ProductController extends Controller
         return view('vendor.productManagement.product.edit', compact('product'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
         $this->authorizeVendorProduct($product);
-    
-        $request->validate([
-            'name'        => 'required|string|max:255',
-            'price'       => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'description' => 'nullable|string',
-            'stock'       => 'nullable|integer|min:0',
-            'image'       => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-    
-        // Handle image upload if new image is provided
-        if ($request->hasFile('image')) {
-        $file = $request->file('image');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/products'), $filename);
-        $product->image = $filename; // only filename
-    }
-    
-        // Update product
-        $product->update([
-            'name'        => $request->name,
-            'slug'        => Str::slug($request->name) . '-' . time(),
-            'price'       => $request->price,
-            'category_id' => $request->category_id,
-            'description' => $request->description,
-            'stock'       => $request->stock ?? 0,
-        ]);
-    
-        $product->save();
+
+        $this->service->update($product, $request->validated());
     
         return redirect()->route('vendor.productManagement.product.index')
                          ->with('success', 'Product updated successfully');
@@ -109,7 +56,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $this->authorizeVendorProduct($product);
-        $product->delete();
+        $this->service->delete($product);
 
         return redirect()->route('vendor.productManagement.product.index')
                          ->with('success', 'Product deleted successfully');

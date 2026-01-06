@@ -7,6 +7,7 @@ use App\Http\Controllers\Vendor\DashboardController;
 use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\Vendor\OrderController;
 use App\Datatables\Vendor\OrdersDataTable;
+use App\Http\Controllers\Vendor\ProfileController as VendorProfile;
 
 Route::prefix('vendor')->name('vendor.')->group(function () {
 
@@ -41,7 +42,13 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
             Route::get('/data', [OrderController::class, 'getOrdersData'])->name('data');
             Route::get('/counts', [OrderController::class, 'getStatusCounts'])->name('counts');
             Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+
         });
+
+        // Vendor Profile Routes 
+        Route::get('/profile', [VendorProfile::class, 'index'])->name('profile.index');
+        Route::post('/profile', [VendorProfile::class, 'update'])->name('profile.update');
+        Route::post('/profile/password', [VendorProfile::class, 'password'])->name('profile.password');
     });
 
 });
