@@ -47,40 +47,40 @@ class OrdersDataTable extends DataTable
 
 
             ->addColumn('payment_status', function ($row) {
-    // Manual badge colors
-    if ($row->payment_status === 'paid') {
-        $color = 'background-color:#d1e7dd;color:#0f5132'; // green
-    } elseif ($row->payment_status === 'pending') {
-        $color = 'background-color:#fff3cd;color:#664d03'; // yellow
-    } else {
-        $color = 'background-color:#e2e3e5;color:#41464b'; // gray
-    }
-    return '<span class="badge" style="'.$color.'">' . ucfirst($row->payment_status) . '</span>';
-})
+                // Manual badge colors
+                if ($row->payment_status === 'paid') {
+                    $color = 'background-color:#d1e7dd;color:#0f5132'; // green
+                } elseif ($row->payment_status === 'pending') {
+                    $color = 'background-color:#fff3cd;color:#664d03'; // yellow
+                } else {
+                    $color = 'background-color:#e2e3e5;color:#41464b'; // gray
+                }
+                return '<span class="badge" style="'.$color.'">' . ucfirst($row->payment_status) . '</span>';
+            })
 
-->addColumn('status', function ($row) {
-    // Manual badge colors
-    switch ($row->status) {
-        case 'pending':
-            $color = 'background-color:#fff3cd;color:#664d03'; // yellow
-            break;
-        case 'processing':
-            $color = 'background-color:#cff4fc;color:#055160'; // cyan
-            break;
-        case 'shipped':
-            $color = 'background-color:#e2e3e5;color:#41464b'; // grey
-            break;
-        case 'delivered':
-            $color = 'background-color:#d1e7dd;color:#0f5132'; // green
-            break;
-        case 'cancelled':
-            $color = 'background-color:#f8d7da;color:#842029'; // red
-            break;
-        default:
-            $color = 'background-color:#e2e3e5;color:#41464b'; // gray
-    }
-    return '<span class="badge" style="'.$color.'">' . ucfirst($row->status) . '</span>';
-})
+            ->addColumn('status', function ($row) {
+                // Manual badge colors
+                switch ($row->status) {
+                    case 'pending':
+                        $color = 'background-color:#fff3cd;color:#664d03'; // yellow
+                        break;
+                    case 'processing':
+                        $color = 'background-color:#cff4fc;color:#055160'; // cyan
+                        break;
+                    case 'shipped':
+                        $color = 'background-color:#e2e3e5;color:#41464b'; // grey
+                        break;
+                    case 'delivered':
+                        $color = 'background-color:#d1e7dd;color:#0f5132'; // green
+                        break;
+                    case 'cancelled':
+                        $color = 'background-color:#f8d7da;color:#842029'; // red
+                        break;
+                    default:
+                        $color = 'background-color:#e2e3e5;color:#41464b'; // gray
+                }
+                return '<span class="badge" style="'.$color.'">' . ucfirst($row->status) . '</span>';
+            })
 
 
             ->editColumn('created_at', function ($row) {

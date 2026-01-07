@@ -23,13 +23,13 @@ class DashboardRepository
         return Order::count();
     }
 
-    public function getTotalRevenue()
-    {
-        //return Order::sum('total_amount');
-    }
+    // public function getTotalRevenue()
+    // {
+    //     //return Order::sum('total_amount');
+    // }
 
-    public function getLatestOrders($limit = 5)
-    {
-        //return Order::latest()->take($limit)->get();
-    }
+    // public function getLatestOrders($limit = 5)
+    // {
+    //     //return Order::latest()->take($limit)->get();
+    // }
 }

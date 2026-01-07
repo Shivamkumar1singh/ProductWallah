@@ -52,14 +52,13 @@ class Order extends Model
 
 
     public function totalForVendor($vendorId)
-{
-    return $this->products
-                ->where('pivot.vendor_id', $vendorId)
-                ->sum(function($product) {
-                    return $product->pivot->price * $product->pivot->quantity;
-                });
-}
+    {
+        return $this->products
+                    ->where('pivot.vendor_id', $vendorId)
+                    ->sum(function($product) {
+                        return $product->pivot->price * $product->pivot->quantity;
+                    });
+    }
 
 
-    
 }

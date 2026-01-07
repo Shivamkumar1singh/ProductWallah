@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Models\Order;
-use App\Models\Vendor\Vendor;      // ✅ Add this
+use App\Models\Vendor\Vendor;      
 use App\Mail\VendorOrderMail;
 use Illuminate\Support\Facades\Mail;
 use App\Repositories\OrderRepository;

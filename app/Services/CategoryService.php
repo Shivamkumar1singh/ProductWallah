@@ -14,6 +14,11 @@ class CategoryService
         $this->repo = $repo;
     }
 
+    public function getForProductForm()
+    {
+        return $this->repo->getAll();
+    }
+
     public function list()
     {
         return $this->repo->getAll();

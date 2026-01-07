@@ -8,7 +8,7 @@
 
     <div class="row">
         <div class="col-xxl-8">
-            <!-- Existing top cards unchanged -->
+            <!-- Existing top cards -->
             <div class="row g-3 mb-3">
                 <!-- TOTAL -->
                 <div class="col-md-6 col-lg-4">

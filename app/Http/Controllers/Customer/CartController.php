@@ -130,7 +130,7 @@ class CartController extends Controller
             return redirect()->route('shop.index')->with('error', $result['error']);
         }
 
-        // ✅ FINALIZE COUPON (DB + usage count)
+        // FINALIZE COUPON (DB + usage count)
         $this->couponService->finalizeCouponUsage(
             $result['order']->id,
             auth()->id()

@@ -267,7 +267,7 @@ $(document).ready(function() {
             pincode: $("#pincode").val()
         };
     
-        // 👉 First save shipping details in session
+        // First save shipping details in session
         $.ajax({
             url: "{{ route('customer.checkout.save.shipping') }}",
             method: "POST",
@@ -277,7 +277,7 @@ $(document).ready(function() {
             },
             success: function() {
     
-                // 👉 Now start the stripe session
+                // Now start the stripe session
                 $.ajax({
                     url: "{{ route('customer.checkout.stripe') }}",
                     method: "POST",

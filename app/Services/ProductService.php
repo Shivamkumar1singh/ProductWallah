@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Products;
+use Illuminate\Support\Facades\Storage;
 use App\Repositories\ProductRepository;
 use Illuminate\Support\Str;
 
@@ -21,25 +23,45 @@ class ProductService
 
     public function create(array $data)
     {
-        if (isset($data['name'])) {
-            $data['slug'] = Str::slug($data['name']);
+        $data['slug'] = Str::slug($data['name']) . '-' . time();
+
+        // Image upload
+        if (isset($data['image'])) {
+            $data['image'] = $data['image']->store('products', 'public');
         }
+
  
         return $this->repo->create($data);
     }
 
-    public function update($product, array $data)
+
+
+    public function update(Products $product, array $data)
     {
-        if (isset($data['name'])) {
-            $data['slug'] = Str::slug($data['name']);
+        // Update slug only if name changed
+        if ($product->name !== $data['name']) {
+            $data['slug'] = Str::slug($data['name']) . '-' . time();
         }
 
-        $this->repo->update($product, $data);
-        return $product->fresh();
+        // Handle image replacement
+        if (isset($data['image'])) {
+
+            if ($product->image) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            $data['image'] = $data['image']->store('products', 'public');
+        }
+
+        return $this->repo->update($product, $data);
     }
 
-    public function delete($product)
+    public function delete(Products $product)
     {
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+
         return $this->repo->delete($product);
     }
 }

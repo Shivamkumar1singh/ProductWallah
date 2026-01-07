@@ -3,7 +3,7 @@
 namespace App\Services\Vendor;
 
 use App\Models\Order;
-use App\Models\Vendor\Vendor;      // ✅ Add this
+use App\Models\Vendor\Vendor;      
 use App\Mail\VendorOrderMail;
 use Illuminate\Support\Facades\Mail;
 use App\Repositories\Vendor\OrderRepository;
@@ -44,8 +44,7 @@ class OrderService
         return $this->repo->getStatusCounts();
     }
 
-    // In App\Services\OrderService.php
-
+    
     public function sendVendorOrderEmail(Order $order): void
     {
         $items = $order->items;

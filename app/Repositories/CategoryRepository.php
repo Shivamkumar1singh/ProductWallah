@@ -8,13 +8,13 @@ use Illuminate\Support\Str;
 class CategoryRepository
 {
     public function getAll()
-{
-    return Category::whereNull('parent_id')
-        ->where('status', 1)
-        ->with('childrenRecursive')
-        ->latest()
-        ->get();
-}
+    {
+        return Category::whereNull('parent_id')
+            ->where('status', 1)
+            ->with('childrenRecursive')
+            ->latest()
+            ->get();
+    }
 
 
     public function store(array $data)

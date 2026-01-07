@@ -194,14 +194,14 @@ class CartService
             'pincode'=> $shipping['pincode'],
         ]);
 
-        // 2️⃣ Attach products to pivot table
+        // Attach products to pivot table
         foreach ($cart as $item) {
 
-            // ✅ Always fetch product from DB
+            // Always fetch product from DB
             $product = Products::select('id', 'vendor_id')
                 ->findOrFail($item['product_id']);
         
-            // 🛑 Safety check
+            // Safety check
             if (!$product->vendor_id) {
                 throw new \Exception("Vendor missing for product ID: {$product->id}");
             }
@@ -214,7 +214,7 @@ class CartService
             ]);
         }
 
-        // ✅ THIS WAS MISSING
+        // THIS WAS MISSING
         $this->orderService->sendVendorOrderEmail($order);
 
         $this->repo->clearCart();

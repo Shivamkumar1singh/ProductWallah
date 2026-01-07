@@ -42,7 +42,7 @@ class Category extends Model
         return $this->hasMany(Category::class, 'parent_id');//->where('status', 1);
     }
 
-    // 🔥 Infinite recursion
+    // Infinite recursion
     public function childrenRecursive()
     {
         return $this->children()->with('childrenRecursive');

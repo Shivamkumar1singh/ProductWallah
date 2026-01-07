@@ -8,7 +8,7 @@ class RoleRequest extends FormRequest
 {
     public function authorize()
     {
-        return true; // You already handle permissions in controller middleware
+        return true; 
     }
 
     public function rules()

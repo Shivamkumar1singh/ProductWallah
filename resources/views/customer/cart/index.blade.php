@@ -106,7 +106,7 @@ $(document).ready(function () {
         return '₹' + parseFloat(amount).toFixed(2);
     }
 
-    // 🔵 UPDATE CART (increase/decrease)
+    // UPDATE CART (increase/decrease)
     $('.update-cart').click(function (e) {
         e.preventDefault();
 
@@ -157,7 +157,7 @@ $(document).ready(function () {
         });
     });
 
-    // 🔴 REMOVE ITEM
+    // REMOVE ITEM
     $('.remove-item').click(function (e) {
         e.preventDefault();
 
@@ -189,7 +189,7 @@ $(document).ready(function () {
         });
     });
 
-    // 🟢 Refresh Grand Total
+    // Refresh Grand Total
     function refreshTotals() {
         $.ajax({
             url: "{{ route('customer.cart.index') }}",
@@ -201,7 +201,7 @@ $(document).ready(function () {
         });
     }
 
-    // ⭐ Alert Function
+    // Alert Function
     function showAlert(message, type = 'success') {
         let alertHtml = `
             <div class="alert alert-${type} alert-dismissible fade show mt-2">

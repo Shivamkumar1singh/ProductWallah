@@ -6,16 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ProductStoreRequest;
 use App\Http\Requests\Product\ProductUpdateRequest;
 use App\Services\ProductService;
+use App\Services\CategoryService;
 use App\Models\Category;
 use App\Models\Products;
 
 class ProductsController extends Controller
 {
     protected $service;
+    protected $categoryService;
 
-    public function __construct(ProductService $service)
+    public function __construct(ProductService $service, CategoryService $categoryService)
     {
         $this->service = $service;
+        $this->categoryService = $categoryService;
     }
 
     public function index()
@@ -26,25 +29,14 @@ class ProductsController extends Controller
 
     public function create()
     {
-        $categories = Category::with('children')->get();
+        $categories = $this->categoryService->getForProductForm();
+
         return view('productManagement.product.create', compact('categories'));
     }
 
     public function store(ProductStoreRequest $request)
     {
-        $data = $request->validated();
-
-        // Handle image upload
-        $imagePath = null;
-        
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store(
-                'products',     // folder inside storage/app/public
-                'public'        // disk
-            );
-        }
-
-        $this->service->create($data);
+        $this->service->create($request->validated());
 
         return redirect()
             ->route('admin.productManagement.product.index') 
@@ -59,25 +51,8 @@ class ProductsController extends Controller
 
     public function update(ProductUpdateRequest $request, Products $product)
     {
-        $data = $request->validated();
-
-        // Handle image upload (CORRECT WAY) 
-        if ($request->hasFile('image')) {
-    
-            // Delete old image (important)
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
-    
-            // Store new image in storage/app/public/products
-            $imagePath = $request->file('image')->store('products', 'public');
-    
-            // Save FULL relative path
-            $product->image = $imagePath;
-        }
-
-        $this->service->update($product, $data);
-
+        $this->service->update($product, $request->validated());
+        
         return redirect()
             ->route('admin.productManagement.product.index')
             ->with('success', 'Product updated!');

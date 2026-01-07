@@ -27,4 +27,4 @@ class ProductRepository
     {
         return $product->delete();
     }
-}
+} 

@@ -16,18 +16,18 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card border-0 shadow-lg rounded-4">
-                <!-- 🟣 Header -->
+                <!-- Header -->
                 <div class="card-header text-center fw-bold fs-4 rounded-top-4"
                      style="background-color: #000; color: #fff;">
                     <i class="bi bi-person-plus-fill me-2"></i> {{ __('Vendor Register') }}
                 </div>
 
-                <!-- 🧾 Card Body -->
+                <!-- Card Body -->
                 <div class="card-body p-4">
                     <form method="POST" action="{{ route('vendor.register') }}">
                         @csrf
 
-                        <!-- 🧍 Name -->
+                        <!-- Name -->
                         <div class="mb-4 position-relative">
                             <label for="name" class="form-label fw-bold text-dark">
                                 <i class="bi bi-person-fill me-1"></i> {{ __('Name') }}
@@ -48,7 +48,7 @@
                             @enderror
                         </div>
 
-                        <!-- 📧 Email -->
+                        <!-- Email -->
                         <div class="mb-4 position-relative">
                             <label for="email" class="form-label fw-bold text-dark">
                                 <i class="bi bi-envelope-fill me-1"></i> {{ __('Email Address') }}
@@ -68,7 +68,7 @@
                             @enderror
                         </div>
 
-                        <!-- 🔒 Password -->
+                        <!-- Password -->
                         <div class="mb-4 position-relative">
                             <label for="password" class="form-label fw-bold text-dark">
                                 <i class="bi bi-lock-fill me-1"></i> {{ __('Password') }}
@@ -81,7 +81,7 @@
                                        required 
                                        autocomplete="new-password"
                                        placeholder="Create a password">
-                                <!-- 👁️ Toggle Password -->
+                                <!-- Toggle Password -->
                                 <span class="position-absolute top-50 end-0 translate-middle-y me-3" 
                                       id="togglePassword" style="cursor: pointer;">
                                     <i class="bi bi-eye-slash fs-5 text-muted"></i>
@@ -94,7 +94,7 @@
                             @enderror
                         </div>
 
-                        <!-- ✅ Confirm Password -->
+                        <!-- Confirm Password -->
                         <div class="mb-4 position-relative">
                             <label for="password-confirm" class="form-label fw-bold text-dark">
                                 <i class="bi bi-shield-lock-fill me-1"></i> {{ __('Confirm Password') }}
@@ -107,7 +107,7 @@
                                        required 
                                        autocomplete="new-password"
                                        placeholder="Confirm your password">
-                                <!-- 👁️ Toggle Confirm Password -->
+                                <!-- Toggle Confirm Password -->
                                 <span class="position-absolute top-50 end-0 translate-middle-y me-3" 
                                       id="toggleConfirmPassword" style="cursor: pointer;">
                                     <i class="bi bi-eye-slash fs-5 text-muted"></i>
@@ -115,14 +115,14 @@
                             </div>
                         </div>
 
-                        <!-- 🚀 Register Button -->
+                        <!-- Register Button -->
                         <div class="text-center mt-4">
                             <button type="submit" class="btn btn-dark px-5 py-2 rounded-pill shadow-sm">
                                 <i class="bi bi-person-check-fill me-1"></i> {{ __('Register') }}
                             </button>
                         </div>
 
-                        <!-- 🔁 Already Have an Account -->
+                        <!-- Already Have an Account -->
                         <div class="text-center mt-3">
                             <p class="mb-0 text-muted">
                                 {{ __("Already have an account?") }}
@@ -139,7 +139,7 @@
 </div>
 @endsection
 
-<!-- 👁️ Password Toggle Script -->
+<!-- Password Toggle Script -->
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {

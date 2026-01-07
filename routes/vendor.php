@@ -24,14 +24,14 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-        // ✅ Product Management
+        // Product Management
         Route::prefix('product-management')
             ->name('productManagement.')
             ->group(function () {
                 Route::resource('product', ProductController::class);
             });
 
-        // ✅ Order Management (FIXED)
+        // Order Management
         Route::prefix('orders')->name('orders.')->group(function () {
 
             // Page
