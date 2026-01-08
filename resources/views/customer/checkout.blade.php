@@ -114,7 +114,7 @@
         
             <!-- LEFT SIDE (Image + Name + Qty) -->
             <div class="d-flex align-items-center">
-                <img src="{{ asset('uploads/products/' . $item['image']) }}" 
+                <img src="{{ asset('storage/' . $item['image']) }}" 
                      alt="{{ $item['name'] }}" 
                      style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px; margin-right: 12px;">
         
@@ -184,21 +184,16 @@
 
 
         <hr>
-
-        @php
-            $discount = session('applied_coupon.discount', 0);
-            $payable  = $total - $discount;
-        @endphp
         
         <div class="d-flex justify-content-between">
-            <span>Total Amount</span>
-            <span>₹{{ number_format($total, 2) }}</span>
+            <span>Subtotal Amount</span>
+            <span>₹{{ number_format($subtotal, 2) }}</span>
         </div>
         
         @if(session()->has('applied_coupon'))
         <div class="d-flex justify-content-between text-success">
             <span>Coupon ({{ session('applied_coupon.code') }})</span>
-            <span>- ₹{{ number_format($discount, 2) }}</span>
+            <span>- ₹{{ number_format(session('applied_coupon.discount'), 2) }}</span>
         </div>
         @endif
         
@@ -267,7 +262,7 @@ $(document).ready(function() {
             pincode: $("#pincode").val()
         };
     
-        // First save shipping details in session
+        // 👉 First save shipping details in session
         $.ajax({
             url: "{{ route('customer.checkout.save.shipping') }}",
             method: "POST",
@@ -277,7 +272,7 @@ $(document).ready(function() {
             },
             success: function() {
     
-                // Now start the stripe session
+                // 👉 Now start the stripe session
                 $.ajax({
                     url: "{{ route('customer.checkout.stripe') }}",
                     method: "POST",
@@ -325,7 +320,7 @@ $(document).ready(function() {
             data: {
                 _token: "{{ csrf_token() }}",
                 coupon_code: code,
-                order_total: {{ $total }}
+                order_total: {{ (int) $total }}
             },
             success: function (response) {
                 if (!response.success) {

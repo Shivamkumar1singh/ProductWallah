@@ -1,5 +1,7 @@
 @extends('layouts.admin.master')
 
+@section('title', 'Orders Details')
+
 @section('content')
 <div class="container mt-4">
     <h3 class="mb-4">

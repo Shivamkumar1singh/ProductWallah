@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@yield('title', 'AdminDek Laravel')</title>
+    <title>Manager Dashboard</title>
+    <link rel="icon" type="image/png" href="{{ asset('admin/assets/images/shopping-bag.png') }}">
     <meta
       name="description"
       content="Admindek - Modern responsive dashboard template built with Bootstrap 5. Features dark/light themes, RTL support, and extensive UI components for admin panels and web applications."

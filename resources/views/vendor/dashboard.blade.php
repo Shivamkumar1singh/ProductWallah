@@ -1,6 +1,6 @@
 @extends('vendor.layouts.vendor')
 
-@section('title', 'Admin Dashboard')
+@section('title', 'Vendor Dashboard')
 
 @section('content')
 <!-- [ Main Content ] start -->

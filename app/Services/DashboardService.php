@@ -19,8 +19,8 @@ class DashboardService
             'total_users'      => $this->repo->countUsers(),
             'total_products'   => $this->repo->countProducts(),
             'total_orders'     => $this->repo->countOrders(),
-            'total_revenue'    => $this->repo->getTotalRevenue(),
-            'latest_orders'    => $this->repo->getLatestOrders(),
+            // 'total_revenue'    => $this->repo->getTotalRevenue(),
+            // 'latest_orders'    => $this->repo->getLatestOrders(),
         ];
     }
 }

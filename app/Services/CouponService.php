@@ -26,8 +26,14 @@ class CouponService
 
     public function createCoupon(array $data): Coupon
     {
+        
+        if (empty($data['usage_limit'])) {
+            $data['usage_limit'] = null;
+        }
+    
         return $this->couponRepository->create($data);
     }
+
 
     public function updateCoupon(Coupon $coupon, array $data): void
     {

@@ -29,7 +29,7 @@
         <tr>
             <td>
                 @if(!empty($item['image']))
-                    <img src="{{ asset('uploads/products/' . $item['image']) }}" width="60">
+                    <img src="{{ asset('storage/' . $item['image']) }}" width="60">
                 @else
                     <span>No image</span>
                 @endif
@@ -62,7 +62,7 @@
 
         <tr>
             <td colspan="5" class="text-end fw-bold">Grand Total</td>
-            <td colspan="2" class="fw-bold" id="grand-total-value">₹{{ number_format($total, 2) }}</td>
+            <td colspan="2" class="fw-bold" id="grand-total-value">₹{{ number_format($subtotal, 2) }}</td>
         </tr>
 
     </tbody>

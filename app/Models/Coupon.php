@@ -47,9 +47,7 @@ class Coupon extends Model
             return false;
         }
     
-        if ($this->usage_limit !== null && $this->used_count >= $this->usage_limit) {
-            return false;
-        }
+        
     
         return true;
     }

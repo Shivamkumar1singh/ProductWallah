@@ -1,5 +1,6 @@
 @extends('layouts.admin.master')
 
+@section('title', 'Coupons Details')
 @section('content')
 <div class="container mt-4">
 

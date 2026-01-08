@@ -10,7 +10,7 @@
 
         <thead>
             <tr>
-                <th>Order ID</th>
+                <th>#Order ID</th>
                 <th>Total</th>
                 <th>Payment</th>
                 <th>Status</th>
@@ -24,7 +24,7 @@
             @forelse($orders as $order)
 
             <tr>
-                <td>{{ $order->id }}</td>
+                <td>#{{ $order->id }}</td>
                 <td>₹{{ number_format($order->total,2) }}</td>
 
                 <td>
@@ -32,8 +32,22 @@
                 </td>
 
                 <td>
-                    <span class="badge bg-primary">{{ ucfirst($order->status) }}</span>
+                    @php
+                        $statusClasses = [
+                            'pending'    => 'bg-warning text-dark',
+                            'processing' => 'bg-info',
+                            'shipped'    => 'bg-primary',
+                            'delivered'  => 'bg-success',
+                            'cancelled'  => 'bg-danger',
+                            'returned'   => 'bg-secondary',
+                        ];
+                    @endphp
+                
+                    <span class="badge {{ $statusClasses[$order->status] ?? 'bg-dark' }}">
+                        {{ ucfirst($order->status) }}
+                    </span>
                 </td>
+
 
                 <td>{{ $order->created_at->format('d M Y') }}</td>
 

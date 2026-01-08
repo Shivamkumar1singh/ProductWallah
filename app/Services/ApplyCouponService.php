@@ -48,6 +48,8 @@ class ApplyCouponService
         session()->put('applied_coupon', [
             'coupon_id' => $coupon->id,
             'code' => $coupon->code,
+            'type' => $coupon->type,
+            'value' => $coupon->value,
             'discount' => round($discount,2),
         ]);
 

@@ -123,18 +123,14 @@ class CartController extends Controller
             return redirect()->route('customer.cart.index')->with('error', 'Shipping or cart data missing.');
         }
 
-        $result = $this->service->handlePaymentSuccess(auth()->id(), $shipping, $cart);
+        $result = $this->service->handlePaymentSuccess(auth()->id(), $shipping, $cart,$stripeSession->payment_intent);
         
 
         if (isset($result['error'])) {
             return redirect()->route('shop.index')->with('error', $result['error']);
         }
 
-        // FINALIZE COUPON (DB + usage count)
-        $this->couponService->finalizeCouponUsage(
-            $result['order']->id,
-            auth()->id()
-        );
+        
 
 
         return view('customer.checkout.success', ['order' => $result['order']]);

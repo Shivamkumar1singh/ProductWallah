@@ -1,4 +1,5 @@
 @extends('layouts.customer.customer')
+<pre>{{ print_r($order->toArray(), true) }}</pre>
 
 @section('content')
 
@@ -61,7 +62,7 @@
                 @foreach ($order->items as $item)
 <div class="d-flex align-items-center justify-content-between mb-3 order-item">
     <div class="d-flex align-items-center">
-        <img src="{{ asset('uploads/products/' . $item['image']) }}" alt="Product">
+        <img src="{{ asset('storage/' . $item['image']) }}" alt="Product">
 
         <div class="ms-3">
             <h6 class="fw-bold">{{ $item['name'] }}</h6>
@@ -76,10 +77,34 @@
 
                 <hr>
 
+                {{-- Subtotal --}}
+                <div class="d-flex justify-content-between">
+                    <span>Subtotal</span>
+                    <span>₹{{ number_format($order->subtotal, 2) }}</span>
+                </div>
+                
+                {{-- Coupon Discount --}}
+                @if($order->discount_amount > 0)
+                    <div class="d-flex justify-content-between text-success mt-1">
+                        <span>
+                            Coupon ({{ $order->coupon_code }})
+                        </span>
+                        <span>
+                            - ₹{{ number_format($order->discount_amount, 2) }}
+                        </span>
+                    </div>
+                @endif
+                
+                <hr>
+                
+                {{-- Final Payable --}}
                 <div class="d-flex justify-content-between mt-2">
                     <h5 class="fw-bold">Total Amount</h5>
-                    <h5 class="fw-bold text-dark">₹{{ number_format($order->total, 2) }}</h5>
+                    <h5 class="fw-bold text-dark">
+                        ₹{{ number_format($order->total, 2) }}
+                    </h5>
                 </div>
+
 
             </div>
         </div>

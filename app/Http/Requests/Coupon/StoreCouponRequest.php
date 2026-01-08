@@ -20,7 +20,7 @@ class StoreCouponRequest extends FormRequest
             'min_order_amount' => 'nullable|numeric|min:0',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'usage_limit' => 'nullable|integer|min:1',
+            'usage_limit' => 'nullable|integer',
             'is_active' => 'required|boolean'
         ];
     }

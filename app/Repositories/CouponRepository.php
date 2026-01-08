@@ -50,10 +50,10 @@ class CouponRepository
                 $q->whereNull('end_date')
                   ->orWhere('end_date', '>=', now());
             })
-            ->where(function ($q) {
-                $q->whereNull('usage_limit')
-                  ->orWhereColumn('used_count', '<', 'usage_limit');
-            })
+            // ->where(function ($q) {
+            //     $q->whereNull('usage_limit')
+            //       ->orWhereColumn('used_count', '<', 'usage_limit');
+            // })
             ->whereDoesntHave('usages', function ($q) use ($userId) {
                 $q->where('user_id', $userId);
             })

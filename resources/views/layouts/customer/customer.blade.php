@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Dashboard</title>
+    <title>@yield('title', 'ProductWallah')</title>
+    <link rel="icon" type="image/png" href="{{ asset('admin/assets/images/shopping-bag.png') }}">
 
     <!-- Bootstrap CSS (5.3.3) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">

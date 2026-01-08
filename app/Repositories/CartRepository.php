@@ -58,4 +58,20 @@ class CartRepository
     {
         return empty($this->getCartFromSession());
     }
+
+    public function getDiscountedTotal(array $cart): float
+    {
+        $total = $this->getGrandTotal($cart);
+        $coupon = session('applied_coupon');
+    
+        if (
+            !is_array($coupon) ||
+            empty($coupon['discount'])
+        ) {
+            return $total;
+        }
+    
+        return max(0, $total - $coupon['discount']);
+    }
+
 }

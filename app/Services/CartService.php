@@ -8,6 +8,8 @@ use App\Models\Products;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use App\Services\OrderService;
+use Illuminate\Support\Facades\DB;
+use App\Services\CouponService;
 
 class CartService
 {
@@ -23,11 +25,13 @@ class CartService
     public function getCartSummary(): array
     {
         $cart = $this->repo->getCartFromSession();
-        $total = $this->repo->getGrandTotal($cart);
+        $subtotal = $this->repo->getGrandTotal($cart);
+        $payable  = $this->repo->getDiscountedTotal($cart);
+
         $count = $this->repo->getCartCount();
         $this->repo->updateCartCountInSession($count);
 
-        return ['cart' => $cart, 'total' => $total, 'count' => $count];
+        return ['cart' => $cart, 'subtotal' => $subtotal, 'payable' => $payable, 'count' => $count];
     }
 
     public function addProductToCart(int $productId): array
@@ -122,9 +126,16 @@ class CartService
         if ($this->repo->isCartEmpty()) return ['error' => 'Your cart is empty.'];
 
         $cart = $this->repo->getCartFromSession();
-        $total = $this->repo->getGrandTotal($cart);
+        $subtotal = $this->repo->getGrandTotal($cart);
+        $discount = session('applied_coupon.discount', 0);
+        $payable = max(0, $subtotal - $discount);
 
-        return ['cart' => $cart, 'total' => $total];
+        return [
+            'cart' => $cart,
+            'subtotal' => $subtotal,
+            'discount' => $discount,
+            'payable' => $payable,
+        ];
     }
 
     public function saveShipping(array $shipping): array
@@ -141,50 +152,79 @@ class CartService
         $shipping = session('shipping_details');
 
         foreach (['full_name','email','phone','address','city','state','pincode'] as $f) {
-            if (empty($shipping[$f])) return ['error' => "Shipping field '{$f}' is missing."];
+            if (empty($shipping[$f])) {
+                return ['error' => "Shipping field '{$f}' is missing."];
+            }
         }
 
-        $lineItems = [];
-        foreach ($cart as $item) {
-            $lineItems[] = [
-                'price_data'=> ['currency'=>'inr','product_data'=>['name'=>$item['name']],'unit_amount'=>intval($item['price']*100)],
-                'quantity'=> $item['quantity'],
-            ];
-        }
+
+
+        $payable = max(1,$this->repo->getDiscountedTotal($cart));
 
         Stripe::setApiKey(config('services.stripe.secret'));
 
-        try {
-            $session = Session::create([
-                'payment_method_types'=> ['card'],
-                'line_items'=> $lineItems,
-                'mode'=> 'payment',
-                'success_url'=> url('/customer/checkout/success?session_id={CHECKOUT_SESSION_ID}'),
-                'cancel_url'=> url('/customer/checkout/cancel'),
+        $session = Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'inr',
+                    'product_data' => ['name' => 'Order Payment'],
+                    'unit_amount' => (int) round($payable * 100),
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => url('/customer/checkout/success?session_id={CHECKOUT_SESSION_ID}'),
+            'cancel_url' => url('/customer/checkout/cancel'),
             ]);
 
-            return ['sessionId' => $session->id];
-        } catch (\Exception $e) {
-            return ['error' => $e->getMessage()];
-        }
+        return ['sessionId' => $session->id];
     }
 
-    public function handlePaymentSuccess(int $userId, array $shipping, array $cart): array
+    public function handlePaymentSuccess(int $userId, array $shipping, array $cart, string $paymentIntent): array
     {
-        if (empty($cart)) return ['error' => 'Cart is empty.'];
-
+        if (empty($cart)) {
+            return ['error' => 'Cart is empty.'];
+        }
+    
         foreach (['full_name','email','phone','address','city','state','pincode'] as $f) {
-            if (empty($shipping[$f])) return ['error' => "Shipping field '{$f}' is missing."];
+            if (empty($shipping[$f])) {
+                return ['error' => "Shipping field '{$f}' is missing."];
+            }
         }
 
-        $total = collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']);
+        $subtotal = $this->repo->getGrandTotal($cart);
+        
+        $coupon = session('applied_coupon');
+        
+        $discount = $coupon['discount'] ?? 0;
+        $couponCode = $coupon['code'] ?? null;
 
+        $total = max(0, $subtotal - $discount);
+
+        $order = null;
+        
+
+        DB::transaction(function () use (
+        $userId,
+        $shipping,
+        $cart,
+        $subtotal,
+        $discount,
+        $couponCode,
+        $total,
+        $paymentIntent,
+        &$order
+    ) {
         $order = Order::create([
             'user_id' => $userId,
             'items' => $cart,
+            'subtotal' => $subtotal,
+            'discount_amount' => $discount,
+            'coupon_code' => $couponCode,
             'total' => $total,
             'payment_status' => 'paid',
-            'payment_intent' => null,
+            'payment_intent' => $paymentIntent,
             'name'=> $shipping['full_name'],
             'email'=> $shipping['email'],
             'phone'=> $shipping['phone'],
@@ -194,14 +234,16 @@ class CartService
             'pincode'=> $shipping['pincode'],
         ]);
 
-        // Attach products to pivot table
+        
+
+        // 2️⃣ Attach products to pivot table
         foreach ($cart as $item) {
 
-            // Always fetch product from DB
+            // ✅ Always fetch product from DB
             $product = Products::select('id', 'vendor_id')
                 ->findOrFail($item['product_id']);
         
-            // Safety check
+            // 🛑 Safety check
             if (!$product->vendor_id) {
                 throw new \Exception("Vendor missing for product ID: {$product->id}");
             }
@@ -214,11 +256,15 @@ class CartService
             ]);
         }
 
-        // THIS WAS MISSING
+        app(\App\Services\CouponService::class)
+           ->finalizeCouponUsage($order->id, $userId);
+
+    });
+        // ✅ THIS WAS MISSING
         $this->orderService->sendVendorOrderEmail($order);
 
         $this->repo->clearCart();
-        session()->forget(['shipping_details', 'stripe_shipping_backup', 'stripe_cart_backup']);
+        session()->forget(['applied_coupon','shipping_details', 'stripe_shipping_backup', 'stripe_cart_backup']);
 
         return ['success' => 'Payment successful!', 'order' => $order];
     }
