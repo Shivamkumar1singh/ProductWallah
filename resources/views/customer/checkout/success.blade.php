@@ -1,5 +1,5 @@
 @extends('layouts.customer.customer')
-<pre>{{ print_r($order->toArray(), true) }}</pre>
+<!-- <pre>{{ print_r($order->toArray(), true) }}</pre> -->
 
 @section('content')
 

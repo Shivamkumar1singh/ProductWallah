@@ -90,7 +90,7 @@
     <div class="dropdown-divider"></div>
 
     <!-- Dropdown Links -->
-    <a href="#!" class="dropdown-item">
+    <a href="{{ route('admin.profile.show')}}" class="dropdown-item">
       <i class="ph ph-user me-2"></i>
       <span>My Account</span>
     </a>

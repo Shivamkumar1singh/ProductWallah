@@ -18,7 +18,7 @@
                             {{ $coupon->code }}
                         </span>
                     
-                        <i class="bi bi-clipboard text-secondary"
+                        <i class="bi bi-copy text-secondary ms-auto"
                            style="cursor:pointer"
                            title="Copy coupon"
                            onclick="copyCoupon('coupon-code-{{ $coupon->id }}', this)">
@@ -65,13 +65,13 @@ function copyCoupon(elementId, icon) {
     navigator.clipboard.writeText(text).then(() => {
 
         // Change icon to check
-        icon.classList.remove('bi-clipboard');
-        icon.classList.add('bi-clipboard-check', 'text-success');
+        icon.classList.remove('bi-copy');
+        icon.classList.add('bi-check-lg', 'text-success');
 
         // Revert back after 2 seconds
         setTimeout(() => {
-            icon.classList.remove('bi-clipboard-check', 'text-success');
-            icon.classList.add('bi-clipboard', 'text-secondary');
+            icon.classList.remove('bi-check-lg', 'text-success');
+            icon.classList.add('bi-copy', 'text-secondary');
         }, 2000);
     });
 }

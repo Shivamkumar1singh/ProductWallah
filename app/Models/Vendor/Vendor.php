@@ -17,6 +17,13 @@ class Vendor extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'gender',
+        'dob',
+        'marital_status',
+        'address',
+        'profile_image',
+        'cover_image',
     ];
 
     // Hidden fields

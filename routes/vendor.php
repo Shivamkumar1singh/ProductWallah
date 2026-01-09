@@ -7,7 +7,7 @@ use App\Http\Controllers\Vendor\DashboardController;
 use App\Http\Controllers\Vendor\ProductController;
 use App\Http\Controllers\Vendor\OrderController;
 use App\Datatables\Vendor\OrdersDataTable;
-use App\Http\Controllers\Vendor\ProfileController as VendorProfile;
+use App\Http\Controllers\Vendor\ProfileController;
 
 Route::prefix('vendor')->name('vendor.')->group(function () {
 
@@ -46,9 +46,14 @@ Route::prefix('vendor')->name('vendor.')->group(function () {
         });
 
         // Vendor Profile Routes 
-        Route::get('/profile', [VendorProfile::class, 'index'])->name('profile.index');
-        Route::post('/profile', [VendorProfile::class, 'update'])->name('profile.update');
-        Route::post('/profile/password', [VendorProfile::class, 'password'])->name('profile.password');
+        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+
+        Route::post('/profile/personal', [ProfileController::class, 'updatePersonal'])->name('profile.personal');
+        Route::post('/profile/contact', [ProfileController::class, 'updateContact'])->name('profile.contact');
+
+        Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar');
+        Route::post('/profile/cover', [ProfileController::class, 'updateCover'])->name('profile.cover');
+        Route::get('/profile/cover/remove', [ProfileController::class, 'removeCover'])->name('profile.cover.remove');
     });
 
 });

@@ -23,7 +23,7 @@
     <div class="alert alert-success" role="alert">
         {{ $message }}
     </div>
-@endif
+@endif 
 
 <table class="table table-bordered roles-table">
     <tr>

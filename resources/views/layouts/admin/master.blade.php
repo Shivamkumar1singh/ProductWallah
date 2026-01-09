@@ -63,7 +63,7 @@
     <link rel="stylesheet" href="{{ asset('admin/assets/css/style.css') }}" id="main-style-link" />
     <link rel="stylesheet" href="{{ asset('admin/assets/css/style-preset.css') }}" />
     <link rel="stylesheet" href="{{ asset('admin/assets/css/custom-table.css') }}">
-
+    
 
     @stack('styles')
 </head>
@@ -107,7 +107,7 @@
 
 
         <!-- [FOOTER] -->
-        @include('admin.layouts.footer')
+        <!-- @include('admin.layouts.footer') -->
 
     </div>
 

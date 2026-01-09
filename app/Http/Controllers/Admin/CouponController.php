@@ -19,15 +19,6 @@ class CouponController extends Controller
         $this->couponService = $couponService;
     }
 
-    // Display all coupons
-
-    // public function index()
-    // {
-    //     $coupons = $this->couponService->getAllCoupons();
-
-    //     return view('admin.coupons.index', compact('coupons'));
-    // }
-
     public function index(CouponDataTable $dataTable)
     {
         return $dataTable->render('admin.coupons.index', [

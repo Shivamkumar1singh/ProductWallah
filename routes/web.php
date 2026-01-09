@@ -158,10 +158,8 @@ Route::middleware(['auth'])->group(function () {
 
 
         // Customer Profile 
-        Route::get('/profile', [CustomerProfile::class, 'index'])->name('profile.index');
-        Route::post('/profile', [CustomerProfile::class, 'update'])->name('profile.update');
-        Route::post('/profile/password', [CustomerProfile::class, 'password'])->name('profile.password');
-
+        
+        
 
     });
 });
@@ -225,9 +223,30 @@ Route::middleware(['auth'])
         )->name('coupons.toggle');
 
         // Admin Profile Routes
-        Route::get('/profile', [AdminProfile::class, 'index'])->name('profile.index');
-        Route::post('/profile', [AdminProfile::class, 'update'])->name('profile.update');
-        Route::post('/profile/password', [AdminProfile::class, 'password'])->name('profile.password');
+        // Profile page
+        Route::get('/profile', [AdminProfile::class, 'show'])
+            ->name('profile.show');
+
+        // Update personal details
+        Route::post('/profile/personal', [AdminProfile::class, 'updatePersonal'])
+            ->name('profile.personal');
+
+        // Update contact details
+        Route::post('/profile/contact', [AdminProfile::class, 'updateContact'])
+            ->name('profile.contact');
+
+        // Update profile Image
+        Route::post('/profile/avatar', [AdminProfile::class, 'updateAvatar'])
+            ->name('profile.avatar');
+
+        //Update Profile Cover Image
+        Route::post('/profile/cover', [AdminProfile::class, 'updateCover'])
+            ->name('profile.cover');
+
+        // Remove Profile Cover Image
+        Route::get('/profile/cover/remove', [AdminProfile::class, 'removeCover'])
+            ->name('profile.cover.remove');
+
 });
 
  

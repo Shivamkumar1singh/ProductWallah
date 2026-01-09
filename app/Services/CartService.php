@@ -234,21 +234,18 @@ class CartService
             'pincode'=> $shipping['pincode'],
         ]);
 
-        
-
-        // 2️⃣ Attach products to pivot table
         foreach ($cart as $item) {
 
-            // ✅ Always fetch product from DB
+            
             $product = Products::select('id', 'vendor_id')
                 ->findOrFail($item['product_id']);
         
-            // 🛑 Safety check
+            
             if (!$product->vendor_id) {
                 throw new \Exception("Vendor missing for product ID: {$product->id}");
             }
 
-            // Make sure your cart item has 'product_id', 'vendor_id', 'quantity', 'price'
+           
             $order->products()->attach($item['product_id'], [
                 'vendor_id' => $product->vendor_id,
                 'quantity'  => $item['quantity'],
@@ -260,7 +257,7 @@ class CartService
            ->finalizeCouponUsage($order->id, $userId);
 
     });
-        // ✅ THIS WAS MISSING
+        
         $this->orderService->sendVendorOrderEmail($order);
 
         $this->repo->clearCart();
